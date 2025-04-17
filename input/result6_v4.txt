@@ -1,0 +1,295 @@
+Based on the provided architecture diagram and the guidelines, here is an analysis of potential attacks and risks according to the MITRE ATT&CK Framework for Enterprise:
+
+### Perimeter Keywords Identified:
+1. **Akamai**: Provides CDN, WAF, and DDoS protection.
+2. **Internet**: External access point.
+3. **Firewall**: Network boundary protection.
+4. **Gateway**: Centralized ingress to the internal network.
+5. **DMZ**: Network segment with restricted access.
+6. **Third Party**: External entities interacting with the system.
+7. **External**: Entities outside the internal network.
+8. **Reverse Proxy**: Web reverse proxy service.
+9. **CDN**: Content delivery network service.
+10. **WAF**: Web application firewall service.
+11. **DDOS**: Distributed denial of service mitigation provider.
+
+### Common Platforms Identified:
+1. **NewRelic**: Application Performance Monitoring.
+2. **Chroma**: Internally managed, internet-exposed application.
+
+### Potential Attacks and Risks:
+
+#### External Attacks:
+1. **Phishing (T1566)**: Attackers may target users (e.g., IAG Colleague as Customer, IAG Colleague as Agent) to gain access to credentials and sensitive information.
+2. **Exploitation of Public-Facing Applications (T1190)**: The public-facing components (e.g., IAG Public Website, Partner Portal) are susceptible to exploitation if vulnerabilities exist.
+3. **Distributed Denial of Service (DDoS) (T1499)**: Despite Akamai's DDoS protection, attackers may attempt to overwhelm the system with traffic.
+4. **Man-in-the-Middle (T1557)**: Attackers may intercept traffic between users and the system, especially if TLS encryption is not properly enforced.
+
+#### Internal Attacks:
+1. **Insider Threat (T1074)**: Malicious insiders (e.g., developers, authorized users) may misuse their access to compromise the system.
+2. **Data Destruction (T1485)**: Insiders with access to databases (e.g., Dynamo Database, Orbit Database) may delete or corrupt data.
+3. **Privilege Escalation (T1068)**: Insiders may exploit vulnerabilities to gain higher privileges within the system.
+
+#### Supply Chain Risks:
+1. **Third-Party Software (T1195)**: Dependencies on third-party services (e.g., Akamai, NewRelic) introduce risks if these services are compromised.
+2. **Software Supply Chain Compromise (T1195.002)**: Attackers may compromise the software supply chain to introduce malicious code into the system.
+
+### Specific Components and Risks:
+1. **Akamai**: While providing security services, it is a critical point of failure. If compromised, it can lead to widespread impact.
+2. **Dynamo Database**: Susceptible to data breaches and unauthorized access if not properly secured.
+3. **Orbit Database**: Similar risks as Dynamo Database, with potential for data breaches and unauthorized access.
+4. **NewRelic**: Monitoring data could be targeted for exfiltration or tampering.
+
+### Remarks:
+- The diagram does not explicitly depict existing versus new components.
+- Some components are non-generic and need more information for a thorough assessment (e.g., "CEP MFE Container", "Chat MFE Container - multi brand support").
+- Ensure all traffic is TLS encrypted as expected, and enforce strict access controls and monitoring.
+
+### Recommendations:
+1. **Regular Security Audits**: Conduct regular security audits and vulnerability assessments of all components.
+2. **Access Controls**: Implement strict access controls and least privilege principles for all users and services.
+3. **Monitoring and Logging**: Enhance monitoring and logging to detect and respond to suspicious activities promptly.
+4. **Supply Chain Security**: Vet third-party services and ensure they adhere to robust security practices.
+5. **User Training**: Provide regular security training to users to mitigate phishing and social engineering attacks.
+
+By focusing on these areas, the architecture can be better protected against potential attacks and risks.
+
+Creating an attack tree involves breaking down each potential attack into its components and subcomponents, showing the various paths an attacker might take to achieve their goal. Below are probable attack trees for each identified attack:
+
+### 1. Phishing (T1566)
+**Goal: Gain access to credentials and sensitive information**
+
+- **Step 1: Identify Target**
+  - Substep: Identify IAG Colleague as Customer
+  - Substep: Identify IAG Colleague as Agent
+
+- **Step 2: Craft Phishing Email**
+  - Substep: Create a convincing email template
+  - Substep: Include malicious link or attachment
+
+- **Step 3: Send Phishing Email**
+  - Substep: Use email spoofing techniques
+  - Substep: Send to identified targets
+
+- **Step 4: Victim Interaction**
+  - Substep: Victim clicks on the link or opens the attachment
+  - Substep: Victim enters credentials on a fake login page
+
+- **Step 5: Harvest Credentials**
+  - Substep: Store credentials in attacker-controlled database
+  - Substep: Use credentials to access sensitive information
+
+### 2. Exploitation of Public-Facing Applications (T1190)
+**Goal: Exploit vulnerabilities in public-facing components**
+
+- **Step 1: Identify Vulnerable Application**
+  - Substep: Scan IAG Public Website
+  - Substep: Scan Partner Portal
+
+- **Step 2: Find Vulnerability**
+  - Substep: Use automated tools to find common vulnerabilities (e.g., SQL injection, XSS)
+  - Substep: Manually test for less common vulnerabilities
+
+- **Step 3: Exploit Vulnerability**
+  - Substep: Craft exploit payload
+  - Substep: Execute payload on the vulnerable application
+
+- **Step 4: Gain Access**
+  - Substep: Obtain unauthorized access to the application
+  - Substep: Escalate privileges within the application
+
+### 3. Distributed Denial of Service (DDoS) (T1499)
+**Goal: Overwhelm the system with traffic**
+
+- **Step 1: Gather Resources**
+  - Substep: Compromise multiple devices to create a botnet
+  - Substep: Rent a botnet from underground markets
+
+- **Step 2: Plan Attack**
+  - Substep: Choose target (e.g., IAG Public Website, Partner Portal)
+  - Substep: Determine attack vector (e.g., HTTP flood, SYN flood)
+
+- **Step 3: Execute Attack**
+  - Substep: Launch attack from botnet
+  - Substep: Monitor attack effectiveness
+
+- **Step 4: Overwhelm Target**
+  - Substep: Increase traffic volume if necessary
+  - Substep: Bypass DDoS protection mechanisms
+
+### 4. Man-in-the-Middle (T1557)
+**Goal: Intercept traffic between users and the system**
+
+- **Step 1: Positioning**
+  - Substep: Gain access to a network segment between the user and the system
+  - Substep: Use techniques like ARP spoofing or DNS poisoning
+
+- **Step 2: Intercept Traffic**
+  - Substep: Capture unencrypted traffic
+  - Substep: Decrypt TLS traffic if possible
+
+- **Step 3: Modify Traffic**
+  - Substep: Inject malicious payloads into the traffic
+  - Substep: Redirect traffic to attacker-controlled servers
+
+- **Step 4: Harvest Data**
+  - Substep: Collect sensitive information (e.g., credentials, personal data)
+  - Substep: Use collected data for further attacks
+
+### 5. Insider Threat (T1074)
+**Goal: Misuse access to compromise the system**
+
+- **Step 1: Identify Insider**
+  - Substep: Identify developers or authorized users with access
+  - Substep: Determine their level of access
+
+- **Step 2: Plan Attack**
+  - Substep: Identify valuable targets (e.g., Dynamo Database, Orbit Database)
+  - Substep: Determine method of attack (e.g., data exfiltration, data destruction)
+
+- **Step 3: Execute Attack**
+  - Substep: Use legitimate access to perform malicious actions
+  - Substep: Cover tracks to avoid detection
+
+- **Step 4: Achieve Goal**
+  - Substep: Exfiltrate sensitive data
+  - Substep: Delete or corrupt data
+
+### 6. Data Destruction (T1485)
+**Goal: Delete or corrupt data in databases**
+
+- **Step 1: Gain Access**
+  - Substep: Use legitimate credentials (insider threat)
+  - Substep: Exploit vulnerabilities to gain unauthorized access
+
+- **Step 2: Identify Target Data**
+  - Substep: Locate sensitive data in Dynamo Database
+  - Substep: Locate sensitive data in Orbit Database
+
+- **Step 3: Destroy Data**
+  - Substep: Execute delete commands
+  - Substep: Corrupt data by modifying records
+
+- **Step 4: Cover Tracks**
+  - Substep: Delete logs
+  - Substep: Use anti-forensic techniques
+
+### 7. Privilege Escalation (T1068)
+**Goal: Gain higher privileges within the system**
+
+- **Step 1: Identify Vulnerability**
+  - Substep: Scan for privilege escalation vulnerabilities
+  - Substep: Use known exploits
+
+- **Step 2: Exploit Vulnerability**
+  - Substep: Craft exploit payload
+  - Substep: Execute payload to gain higher privileges
+
+- **Step 3: Maintain Access**
+  - Substep: Create backdoor accounts
+  - Substep: Modify system configurations to retain elevated privileges
+
+### 8. Third-Party Software (T1195)
+**Goal: Compromise third-party services**
+
+- **Step 1: Identify Third-Party Services**
+  - Substep: Identify dependencies on Akamai, NewRelic
+
+- **Step 2: Find Vulnerability**
+  - Substep: Scan for vulnerabilities in third-party services
+  - Substep: Monitor for disclosed vulnerabilities
+
+- **Step 3: Exploit Vulnerability**
+  - Substep: Craft exploit payload
+  - Substep: Execute payload on third-party service
+
+- **Step 4: Compromise System**
+  - Substep: Use compromised third-party service to gain access to the system
+  - Substep: Escalate privileges within the system
+
+### 9. Software Supply Chain Compromise (T1195.002)
+**Goal: Introduce malicious code into the system**
+
+- **Step 1: Identify Target Software**
+  - Substep: Identify software components used in the system
+
+- **Step 2: Compromise Supply Chain**
+  - Substep: Compromise software vendor
+  - Substep: Inject malicious code into software updates
+
+- **Step 3: Distribute Malicious Code**
+  - Substep: Ensure malicious code is included in software updates
+  - Substep: Wait for updates to be deployed in the target system
+
+- **Step 4: Execute Malicious Code**
+  - Substep: Trigger malicious code within the system
+  - Substep: Achieve desired impact (e.g., data exfiltration, system disruption)
+
+By breaking down each attack into these steps and substeps, we can better understand the potential paths an attacker might take and implement appropriate defenses to mitigate these risks.
+
+Based on the provided architecture diagram and the identified potential attacks and risks, here are systematic mitigation suggestions for each identified attack:
+
+### 1. Phishing (T1566)
+**Mitigation Suggestions:**
+- **User Training**: Conduct regular security awareness training for all users to recognize phishing attempts.
+- **Email Filtering**: Implement advanced email filtering solutions to detect and block phishing emails.
+- **Multi-Factor Authentication (MFA)**: Enforce MFA for all user accounts to add an extra layer of security.
+- **Incident Response**: Establish a clear incident response plan for handling phishing incidents.
+
+### 2. Exploitation of Public-Facing Applications (T1190)
+**Mitigation Suggestions:**
+- **Regular Patching**: Ensure all public-facing applications are regularly updated and patched to fix known vulnerabilities.
+- **Web Application Firewall (WAF)**: Utilize a WAF to detect and block malicious traffic targeting web applications.
+- **Vulnerability Scanning**: Conduct regular vulnerability scans and penetration testing on public-facing applications.
+- **Secure Coding Practices**: Implement secure coding practices and conduct code reviews to minimize vulnerabilities.
+
+### 3. Distributed Denial of Service (DDoS) (T1499)
+**Mitigation Suggestions:**
+- **DDoS Protection Services**: Continue using Akamai's DDoS protection services and ensure they are properly configured.
+- **Traffic Monitoring**: Implement real-time traffic monitoring to detect and respond to DDoS attacks quickly.
+- **Rate Limiting**: Apply rate limiting on critical endpoints to mitigate the impact of DDoS attacks.
+- **Redundancy and Load Balancing**: Use redundancy and load balancing to distribute traffic and reduce the impact of DDoS attacks.
+
+### 4. Man-in-the-Middle (T1557)
+**Mitigation Suggestions:**
+- **TLS Encryption**: Ensure all traffic between users and the system is encrypted using TLS.
+- **Certificate Management**: Implement proper certificate management practices to prevent the use of expired or invalid certificates.
+- **Network Segmentation**: Use network segmentation to limit the exposure of sensitive traffic.
+- **Secure DNS**: Use DNSSEC to protect against DNS spoofing and poisoning attacks.
+
+### 5. Insider Threat (T1074)
+**Mitigation Suggestions:**
+- **Access Controls**: Implement strict access controls and enforce the principle of least privilege for all users.
+- **Monitoring and Logging**: Enhance monitoring and logging to detect suspicious activities by insiders.
+- **User Behavior Analytics**: Use user behavior analytics to identify abnormal behavior that may indicate insider threats.
+- **Regular Audits**: Conduct regular audits of user access and activities to identify potential insider threats.
+
+### 6. Data Destruction (T1485)
+**Mitigation Suggestions:**
+- **Data Backups**: Implement regular data backups and ensure they are stored securely and tested for restoration.
+- **Access Controls**: Enforce strict access controls to limit who can delete or modify data.
+- **Database Security**: Use database security features such as encryption, access controls, and auditing.
+- **Incident Response**: Develop and test an incident response plan for data destruction scenarios.
+
+### 7. Privilege Escalation (T1068)
+**Mitigation Suggestions:**
+- **Patch Management**: Regularly update and patch systems to fix known privilege escalation vulnerabilities.
+- **Access Controls**: Implement strict access controls and enforce the principle of least privilege.
+- **Monitoring and Logging**: Monitor and log all privileged access and activities to detect unauthorized privilege escalation.
+- **Security Hardening**: Harden systems by disabling unnecessary services and applying security best practices.
+
+### 8. Third-Party Software (T1195)
+**Mitigation Suggestions:**
+- **Vendor Management**: Vet third-party vendors and ensure they adhere to robust security practices.
+- **Regular Updates**: Ensure third-party software is regularly updated and patched.
+- **Security Assessments**: Conduct security assessments of third-party software before deployment.
+- **Monitoring and Logging**: Monitor and log activities related to third-party software to detect suspicious behavior.
+
+### 9. Software Supply Chain Compromise (T1195.002)
+**Mitigation Suggestions:**
+- **Code Integrity**: Implement code signing to ensure the integrity of software updates.
+- **Supply Chain Security**: Work with software vendors to ensure they follow secure development and supply chain practices.
+- **Regular Audits**: Conduct regular audits of the software supply chain to identify potential risks.
+- **Incident Response**: Develop and test an incident response plan for supply chain compromise scenarios.
+
+By implementing these mitigation strategies, the architecture can be better protected against the identified potential attacks and risks. Regular reviews and updates to these strategies will help maintain a robust security posture.
