@@ -5,3 +5,29 @@ openai
 qdrant-client
 pillow
 requests
+
+tiktoken 
+
+# for AIUtils
+google-api-python-client
+google-cloud-aiplatform
+vertexai
+# GCPShortLivedCredentials@git+https://github.customerlabs.com.au/iaganalytics/GCPShortLivedCredentials.git
+cachetools==4.2.4
+certifi==2023.5.7
+#cffi==1.15.1
+charset-normalizer==2.0.12
+cryptography==40.0.2
+google-auth==2.20.0
+idna==3.4
+msal==1.22.0
+pyasn1==0.5.0
+pyasn1-modules==0.3.0
+pycparser==2.21
+PyJWT==2.4.0
+requests==2.27.1
+rsa==4.9
+six==1.16.0
+urllib3==1.26.16
+
+python-dotenv

@@ -1,10 +1,11 @@
-version: "3.9"
-
 services:
   backend:
     build:
       context: ./backend
       dockerfile: backend.Dockerfile
+      args:
+        http_proxy: http://cloudproxy.auiag.corp:8080
+        https_proxy: http://cloudproxy.auiag.corp:8080
     ports:
       - "8000:8000"
     volumes:
@@ -13,11 +14,17 @@ services:
       - ./output:/app/output
     environment:
       - PYTHONUNBUFFERED=1
+      - http_proxy=http://cloudproxy.auiag.corp:8080
+      - https_proxy=http://cloudproxy.auiag.corp:8080
+      - no_proxy=127.0.0.1,localhost,169.254.169.254,customerlabs.com.au,auiag.corp,dataeng.internal,iag.com.au,iagcloud.net,ap-southeast-2.eks.amazonaws.com
 
   frontend:
     build:
       context: ./frontend
       dockerfile: frontend.Dockerfile
+      args:
+        http_proxy: http://cloudproxy.auiag.corp:8080
+        https_proxy: http://cloudproxy.auiag.corp:8080
     ports:
       - "8501:8501"
     volumes:
@@ -26,3 +33,6 @@ services:
       - ./output:/app/output
     environment:
       - PYTHONUNBUFFERED=1
+      - http_proxy=http://cloudproxy.auiag.corp:8080
+      - https_proxy=http://cloudproxy.auiag.corp:8080
+      - no_proxy=backend,127.0.0.1,localhost,169.254.169.254,customerlabs.com.au,auiag.corp,dataeng.internal,iag.com.au,iagcloud.net,ap-southeast-2.eks.amazonaws.com

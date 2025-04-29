@@ -149,6 +149,8 @@ def page2():
     }
   }
 }
+    identified_json = st.session_state["identified_json"]
+    print(type(identified_json))
     predicted_attacks_and_risks = identified_json["potential_attacks_identified"]
     st.write("based on ...")
     col1, col2, col3 = st.columns(3)

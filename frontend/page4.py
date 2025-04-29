@@ -219,6 +219,8 @@ def page4():
   }
         
     # Dictionary with mitigation details
+    # chaned to /app/input/ for docker volume mounting
+    # changed to input/ for FE testing on venv 
     with open("/app/input/rev_mapping_manual_mit_to_controls_final.json", 'r') as f:
         mitigation_details = json.load(f)
     
@@ -253,10 +255,10 @@ def page4():
     df = pd.DataFrame(rows)
     
     # Display the dataframe
-    #after mounting volumes to app input and output in docker compose
+    # changed to /app/output/ after mounting volumes to app input and output in docker compose
+    # changed to output. for FE testing on venv
     df.to_csv("/app/output/iag_controls_rec.csv", index=False)
     csv = df.to_csv(index=False).encode('utf-8')
-
     
     df2 = pd.read_csv("/app/output/iag_controls_rec.csv")
     st.dataframe(df2)

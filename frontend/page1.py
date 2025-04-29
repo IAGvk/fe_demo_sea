@@ -42,13 +42,20 @@ def page1():
             "image": image_base64,
             "questions": [question1, question2, question3a, question3b, question4]
         }
+        # for FE testing
+        description = "Generated description based on image and questions"
+        options = ["Attack 1", "Attack 2", "Attack 3"]
+        result = {"description": description, "options": options}
         response = requests.post("http://backend:8000/generate_description", json=data)
         result = response.json()
         st.write(result)
-        # changed to app/input after mounting volumes in docker compose
+        print(type(result["description"]))
+        # changed to /app/input/ after mounting volumes in docker compose
+        # changed to input/ during FE testing with venv
         with open("/app/input/data.json", "w") as f:
             json.dump(data, f)
         st.session_state["options"] = result["options"]
+        st.session_state["identified_json"] = result["description"]
         st.success("Data submitted successfully!")
         return True
     return False

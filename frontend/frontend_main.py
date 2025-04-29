@@ -8,8 +8,11 @@ import base64
 
 import time
 
+import os
+
 def user_in():
     print("Input")
+    print(os.getcwd())
     page1()
     if st.button("Next"):
         st.session_state.current_page = "Shortlist"
