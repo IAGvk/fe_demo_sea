@@ -5,13 +5,21 @@ import json
 def page3():
     st.title("Suggestions for Mitigations")
     context = st.session_state.get("context", {})
+    data = {
+      "image" : st.session_state["image_b64"],
+      "analysis_result_dict" : {
+        "predicted_attacks" : st.session_state["identified_json"]["potential_attacks_identified"],
+        "attack_trees" : st.session_state["attack_tree_result"]
+        }
+    }
 
-    if context:
-        # response = requests.post("http://backend:8000/generate_suggestions", json=context)
-        # final_suggestions = response.json()
-        # with open("output/final_suggestions.json", "w") as f:
-        #     json.dump(final_suggestions, f)
-        st.write(final_suggestions)
+    if data:
+        response = requests.post("http://backend:8000/generate_mitigations", json=data)
+        final_suggestions = response.json()
+        with open("/app/output/final_suggestions.json", "w") as f:
+            json.dump(final_suggestions["description"], f)
+        st.write(final_suggestions["description"])
+        st.session_state["attacks_to_mitigations_output"]= final_suggestions["description"]
     
 
     attacks_to_mitigations_output = {
@@ -220,7 +228,7 @@ def page3():
       ]
     }
   }
-    for technique_id, details in attacks_to_mitigations_output.items():
+    for technique_id, details in final_suggestions["description"].items():
         with st.expander(f"{technique_id}: {details['attack_technique_name']}"):
             st.markdown(f"**Mitigations:**")
             for mitigation_id, mitigation_name, reasoning in zip(details['mitigation_ids'], details['mitigation_names'], details['reasonings']):

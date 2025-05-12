@@ -34,6 +34,7 @@ def page1():
                 image.save(image_bytes, format='PNG')
                 image_bytes = image_bytes.getvalue()
                 image_base64 = base64.b64encode(image_bytes).decode('utf-8')
+                st.session_state["image_b64"] = image_base64
             else:
                 image_base64 = None
         
@@ -54,7 +55,7 @@ def page1():
         # changed to input/ during FE testing with venv
         with open("/app/input/data.json", "w") as f:
             json.dump(data, f)
-        st.session_state["options"] = result["options"]
+        # st.session_state["options"] = result["options"]
         st.session_state["identified_json"] = result["description"]
         st.success("Data submitted successfully!")
         return True

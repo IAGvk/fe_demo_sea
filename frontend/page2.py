@@ -187,19 +187,21 @@ def page2():
     st.session_state["selected_options"] = selected_options
     
     if st.button("Submit Selected Options"):
-        # data = {"options": selected_options}
+        data = {
+          "image" : st.session_state["image_b64"],
+          "analysis_result_dict": selected_options}
         try:
-        #     response = requests.post("http://backend:8000/fetch_context", json=data)
-        #     response.raise_for_status()  # Check if the request was successful
-        #     context_result = response.json()  # Attempt to parse JSON
+            response = requests.post("http://backend:8000/generate_attack_trees", json=data)
+            response.raise_for_status()  # Check if the request was successful
+            attack_tree_result = response.json()  # Attempt to parse JSON
         #     # tests
         #     curpath = os.path.abspath(os.curdir)
         #     st.write(curpath)
             
         #     with open("../output/context.json", "w") as f:
         #         json.dump(context_result, f)
-        #     st.session_state["context"] = context_result
-            st.success("Context fetched successfully!")
+            st.session_state["attack_tree_result"] = attack_tree_result["description"]
+            st.success("attack_trees fetched successfully!")
             return True
         except requests.exceptions.RequestException as e:
             st.error(f"Request failed: {e}")

@@ -10,40 +10,8 @@ class SecurityAnalyzer:
         """
         self.ai_utils = ai_utils
         self.prompt_service = prompt_service
-        self.identified_op_format = {
-            "existing_components": "",
-            "new_components_identified": "",
-            "perimeter_words_identified": "",
-            "potential_attacks_identified": {
-                "main_attack_class": {
-                    "attack_name": {
-                        "technique_id": "",
-                        "technique_name": "",
-                        "description": "Explanation of why the architecture is susceptible to this technique."
-                    },
-                    "attack_name": {
-                        "technique_id": "",
-                        "technique_name": "",
-                        "description": "Explanation of why the architecture is susceptible to this technique."
-                    }
-                },
-                "main_attack_class": {
-                    "attack_name": {
-                        "technique_id": "",
-                        "technique_name": "",
-                        "description": "Explanation of why the architecture is susceptible to this technique."
-                    },
-                    "attack_name": {
-                        "technique_id": "",
-                        "technique_name": "",
-                        "description": "Explanation of why the architecture is susceptible to this technique."
-                    }
-                }
-            },
-            "Remarks": ""  # Add a remarks section to capture component identification issues or other relevant observations
-        }
 
-    def analyze_architecture(self, image: str, existing_components: list, new_components: list, internet_facing: bool, data_sensitivity: str, attempts: int = 1) -> str:
+    def identify_architecture_gaps(self, image: str, existing_components: str, new_components: str, internet_facing: str, data_sensitivity: str, attempts: int = 1) -> str:
         """Analyzes the architecture diagram for security vulnerabilities."""
         try:
             # Validate input data
@@ -57,11 +25,12 @@ class SecurityAnalyzer:
             return json.dumps({"error": f"Invalid input data: {e}"})
 
         # Build prompts
-        identify_prompt = self.prompt_service.get_identify_prompt()
         perimeter_words = self.prompt_service.get_perimeter_words()
         common_platforms = self.prompt_service.get_common_platforms()
+        identify_prompt = self.prompt_service.get_identify_prompt()
         guiding_prompt = self.prompt_service.build_guiding_prompt(
             existing_components, new_components, internet_facing, data_sensitivity)
+            
         full_identify_prompt = f"{identify_prompt} \
                  Perimeter words : {perimeter_words},\
                  Common Platforms : {common_platforms} \
@@ -72,9 +41,63 @@ class SecurityAnalyzer:
             full_identify_prompt, image, attempts=attempts)
 
         # Second Pass: Format the output as JSON
-        formatting_prompt = self.prompt_service.build_formatting_prompt(
-            identified_output, self.identified_op_format)
+        formatting_prompt = self.prompt_service.build_identified_formatting_prompt(
+            identified_output)
 
         json_output = self.ai_utils.get_completion_json(
             formatting_prompt, attempts=attempts)
+        return json_output
+
+    def generate_attack_trees(self, image: str, analysis_result_dict: dict, attempts: int = 1) -> str:
+        try:
+            #'Validate the data'
+            pass
+        except Exception as e:
+            return json.dumps({"error": f"Invalid input data: {e}"})
+
+        
+        attack_tree_prompt = self.prompt_service.get_attack_tree_prompt()
+        
+        identified_output = analysis_result_dict 
+
+        full_attack_tree_prompt = f"{attack_tree_prompt} \
+                 Identified Attacks : {identified_output}"
+
+        
+        # First Pass: Get the initial analysis
+        attack_tree_output = self.ai_utils.get_completion_img_to_json(
+            full_attack_tree_prompt, image, attempts=attempts)
+
+        attack_tree_formatting_prompt = self.prompt_service.build_attack_tree_formatting_prompt(
+            attack_tree_output)
+
+        json_output = self.ai_utils.get_completion_json(
+            attack_tree_formatting_prompt, attempts=attempts)
+        return json_output
+
+    def generate_mitigations(self, image: str, analysis_result_dict: dict, attempts: int = 1) -> str:
+        try:
+            #'Validate the data'
+            pass
+        except Exception as e:
+            return json.dumps({"error": f"Invalid input data: {e}"})
+
+        
+        mitigation_prompt = self.prompt_service.get_mitigations_prompt()
+        
+        previously_generated_analysis = analysis_result_dict 
+
+        full_mitigation_prompt = f"{mitigation_prompt} \
+                 Identified Attacks : {previously_generated_analysis}"
+
+        
+        # First Pass: Get the initial analysis
+        mitigation_output = self.ai_utils.get_completion_img_to_json(
+            full_mitigation_prompt, image, attempts=attempts)
+
+        mitigation_formatting_prompt = self.prompt_service.build_mitigations_formatting_prompt(
+            mitigation_output)
+
+        json_output = self.ai_utils.get_completion_json(
+            mitigation_formatting_prompt, attempts=attempts)
         return json_output

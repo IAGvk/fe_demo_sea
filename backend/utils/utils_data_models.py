@@ -15,7 +15,7 @@ class IdentifiedOutputFormat(BaseModel):
         return value
 
 class AnalysisInput(BaseModel):
-    existing_components: List[str]
-    new_components: List[str]
-    internet_facing: bool
+    existing_components: str
+    new_components: str
+    internet_facing: str
     data_sensitivity: str

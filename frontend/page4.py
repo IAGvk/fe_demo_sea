@@ -229,7 +229,7 @@ def page4():
     rows = []
     
     # Iterate over each attack technique
-    for attack_id, attack_info in attacks_to_mitigations_output.items():
+    for attack_id, attack_info in st.session_state["attacks_to_mitigations_output"].items():
         # Iterate over each mitigation for the attack technique
         for i, mitigation_id in enumerate(attack_info["mitigation_ids"]):
             # Get the mitigation details
